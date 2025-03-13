@@ -4,3 +4,4 @@
 #include <silk/core/types.h>
 #include <silk/core/log.h>
 #include <silk/core/log_categories.h>
+#include <silk/core/assert.h>
