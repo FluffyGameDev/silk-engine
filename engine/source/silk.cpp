@@ -1,6 +1,6 @@
-#include <iostream>
+#include <silk/silk.h>
 
 int main()
 {
-    std::cout << "Hello, world !\n";
+    SILK_LOG_MESSAGE(silk::LogCore, "Hello World !");
 }

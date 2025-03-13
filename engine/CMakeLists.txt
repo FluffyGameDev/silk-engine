@@ -42,3 +42,5 @@ add_executable(SilkEngine ${SILK_ENGINE_HEADERS} ${SILK_ENGINE_SOURCE})
 target_include_directories(SilkEngine PRIVATE ${SILK_ENGINE_INCLUDE_DIR})
 
 set_property(TARGET SilkEngine PROPERTY CXX_STANDARD 17)
+
+target_compile_definitions(SilkEngine PUBLIC SILK_ENABLE_LOGS)
