@@ -5,6 +5,8 @@
 #include <chrono>
 #include <type_traits>
 
+#include <silk/core/steady_clock.h>
+
 namespace silk
 {
     class ProfilingScopedTimer
@@ -14,11 +16,8 @@ namespace silk
         ~ProfilingScopedTimer();
 
     private:
-        using ProfilingClock = typename std::conditional<std::chrono::high_resolution_clock::is_steady,
-            std::chrono::high_resolution_clock, std::chrono::steady_clock>::type;
-
         const char* m_TimerName;
-        std::chrono::time_point<ProfilingClock> m_StartTime;
+        std::chrono::time_point<SteadyClock> m_StartTime;
     };
 }
 

@@ -8,13 +8,13 @@ namespace silk
 {
     ProfilingScopedTimer::ProfilingScopedTimer(const char* timerName)
         : m_TimerName{ timerName }
-        , m_StartTime{ ProfilingClock::now() }
+        , m_StartTime{ SteadyClock::now() }
     {
     }
 
     ProfilingScopedTimer::~ProfilingScopedTimer()
     {
-        s64 endTime{ std::chrono::duration_cast<std::chrono::microseconds>(ProfilingClock::now().time_since_epoch()).count() };
+        s64 endTime{ std::chrono::duration_cast<std::chrono::microseconds>(SteadyClock::now().time_since_epoch()).count() };
         s64 startTime{ std::chrono::duration_cast<std::chrono::microseconds>(m_StartTime.time_since_epoch()).count() };
         Profiler::get().LogProfileTiming(m_TimerName, startTime, endTime);
     }
