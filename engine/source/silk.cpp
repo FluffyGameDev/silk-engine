@@ -1,6 +1,8 @@
-#include <silk/silk.h>
+#include <silk/engine/engine.h>
+#include <silk/engine/engine_config.h>
 
 int main()
 {
-    SILK_LOG_MESSAGE(silk::LogCore, "Hello World !");
+    silk::EngineConfig engineConfig{ 30 };
+    silk::RunEngine(engineConfig);
 }
