@@ -5,6 +5,7 @@
 
 #include <silk/core/steady_clock.h>
 #include <silk/engine/engine_config.h>
+#include <silk/engine/graphics/graphics_context.h>
 #include <silk/engine/window/application_window.h>
 #include <silk/engine/window/application_window_config.h>
 #include <silk/engine/window/application_window_inputs.h>
@@ -25,6 +26,9 @@ namespace silk
         ApplicationWindow mainWindow{};
         mainWindow.Init(mainWindowConfig);
 
+        GraphicsContext graphicsContext{};
+        graphicsContext.Init();
+
         ApplicationWindowInputs mainWindowInputs{};
         while (!mainWindowInputs.shouldCloseWindow)
         {
@@ -33,8 +37,8 @@ namespace silk
             mainWindow.PollInputs(mainWindowInputs);
 
             //Update
-            //Render
 
+            graphicsContext.Render();
             mainWindow.SwapBuffer();
 
             auto frameDuration{ std::chrono::duration_cast<decltype(targetFrameLength)>(SteadyClock::now() - frameStartTime)};
@@ -44,6 +48,7 @@ namespace silk
             }
         }
 
+        graphicsContext.Shutdown();
         mainWindow.Shutdown();
     }
 }
