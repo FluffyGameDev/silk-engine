@@ -23,6 +23,7 @@ target_include_directories(SilkEngine PRIVATE ${SILK_ENGINE_INCLUDE_DIR})
 target_compile_definitions(SilkEngine PUBLIC SILK_ENABLE_LOGS)
 target_compile_definitions(SilkEngine PUBLIC SILK_ENABLE_ASSERTS)
 target_compile_definitions(SilkEngine PUBLIC SILK_ENABLE_PROFILER)
+target_compile_definitions(SilkEngine PUBLIC SILK_GRAPHICS_DEBUGGING)
 
 
 find_package(glad)
