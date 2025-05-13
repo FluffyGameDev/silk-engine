@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.15)
 
 set(SILK_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/..")
 list(APPEND CMAKE_PREFIX_PATH "${SILK_ROOT_DIR}/cmake/modules")
@@ -17,6 +17,12 @@ add_executable(SilkEngine ${SILK_ENGINE_SOURCE})
 
 set_property(TARGET SilkEngine PROPERTY CXX_STANDARD 20)
 set_property(TARGET SilkEngine PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET SilkEngine PROPERTY COMPILE_WARNING_AS_ERROR ON)
+
+target_compile_options(SilkEngine PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
 
 target_include_directories(SilkEngine PRIVATE ${SILK_ENGINE_INCLUDE_DIR})
 
