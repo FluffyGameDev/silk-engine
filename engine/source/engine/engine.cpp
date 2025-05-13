@@ -55,6 +55,7 @@ namespace silk
             }
         }
 
+        debugToolbox.Shutdown();
         graphicsContext.Shutdown();
         mainWindow.Shutdown();
     }
