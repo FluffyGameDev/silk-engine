@@ -5,6 +5,7 @@
 
 #include <silk/core/steady_clock.h>
 #include <silk/engine/engine_config.h>
+#include <silk/engine/debug/debug_toolbox.h>
 #include <silk/engine/graphics/graphics_context.h>
 #include <silk/engine/window/application_window.h>
 #include <silk/engine/window/application_window_config.h>
@@ -29,16 +30,22 @@ namespace silk
         GraphicsContext graphicsContext{};
         graphicsContext.Init();
 
+        DebugToolbox debugToolbox{};
+        debugToolbox.Init(mainWindow);
+
         ApplicationWindowInputs mainWindowInputs{};
         while (!mainWindowInputs.shouldCloseWindow)
         {
             auto frameStartTime = SteadyClock::now();
 
+            debugToolbox.StartFrame();
             mainWindow.PollInputs(mainWindowInputs);
 
             //Update
 
             graphicsContext.Render();
+            debugToolbox.EndFrame();
+
             mainWindow.SwapBuffer();
 
             auto frameDuration{ std::chrono::duration_cast<decltype(targetFrameLength)>(SteadyClock::now() - frameStartTime)};

@@ -18,6 +18,8 @@ namespace silk
         void SwapBuffer();
         void PollInputs(ApplicationWindowInputs& inputs);
 
+        inline GLFWwindow* GetWindow() { return m_Window; }
+
     private:
         GLFWwindow* m_Window;
     };

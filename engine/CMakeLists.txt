@@ -27,4 +27,5 @@ target_compile_definitions(SilkEngine PUBLIC SILK_ENABLE_PROFILER)
 
 find_package(glad)
 find_package(glfw)
-target_link_libraries(SilkEngine PRIVATE glad glfw)
+find_package(imgui)
+target_link_libraries(SilkEngine PRIVATE glad glfw imgui)
