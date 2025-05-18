@@ -3,6 +3,7 @@
 #include <silk/engine/engine_config.h>
 #include <silk/engine/debug/debug_toolbox.h>
 #include <silk/engine/graphics/graphics_context.h>
+#include <silk/engine/frame_rate/frame_rate_timer.h>
 #include <silk/engine/window/application_window.h>
 
 namespace silk
@@ -26,5 +27,6 @@ namespace silk
         ApplicationWindow m_MainWindow;
         GraphicsContext m_GraphicsContext;
         DebugToolbox m_DebugToolbox;
+        FrameRateTimer m_FrameRateTimer;
     };
 }
