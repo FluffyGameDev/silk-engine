@@ -4,19 +4,44 @@
 #include <thread>
 
 #include <silk/core/steady_clock.h>
-#include <silk/engine/engine_config.h>
-#include <silk/engine/debug/debug_toolbox.h>
-#include <silk/engine/graphics/graphics_context.h>
-#include <silk/engine/window/application_window.h>
 #include <silk/engine/window/application_window_config.h>
 #include <silk/engine/window/application_window_inputs.h>
 
 namespace silk
 {
-    void RunEngine(const EngineConfig& config)
+    Engine::Engine(const EngineConfig& config)
+        : m_EngineConfig{ config }
+        , m_MainWindow{}
+        , m_GraphicsContext{}
+        , m_DebugToolbox{}
     {
-        std::chrono::microseconds targetFrameLength{ 1000000LL / static_cast<typename std::chrono::microseconds::rep>(config.targetFps) };
+    }
 
+    void Engine::Run()
+    {
+        std::chrono::microseconds targetFrameLength{ 1000000LL / static_cast<typename std::chrono::microseconds::rep>(m_EngineConfig.targetFps) };
+
+        Init();
+
+        ApplicationWindowInputs mainWindowInputs{};
+        while (!mainWindowInputs.shouldCloseWindow)
+        {
+            auto frameStartTime = SteadyClock::now();
+
+            RunFrame(mainWindowInputs);
+
+            auto frameDuration{ std::chrono::duration_cast<decltype(targetFrameLength)>(SteadyClock::now() - frameStartTime) };
+            if (frameDuration < targetFrameLength)
+            {
+                std::this_thread::sleep_for(targetFrameLength - frameDuration);
+            }
+        }
+
+        Shutdown();
+    }
+
+    void Engine::Init()
+    {
         ApplicationWindowConfig mainWindowConfig
         {
             .width = 800,
@@ -24,39 +49,28 @@ namespace silk
             .windowTitle = "Silk"
         };
 
-        ApplicationWindow mainWindow{};
-        mainWindow.Init(mainWindowConfig);
+        m_MainWindow.Init(mainWindowConfig);
+        m_GraphicsContext.Init();
+        m_DebugToolbox.Init(m_MainWindow);
+    }
 
-        GraphicsContext graphicsContext{};
-        graphicsContext.Init();
+    void Engine::Shutdown()
+    {
+        m_DebugToolbox.Shutdown();
+        m_GraphicsContext.Shutdown();
+        m_MainWindow.Shutdown();
+    }
 
-        DebugToolbox debugToolbox{};
-        debugToolbox.Init(mainWindow);
+    void Engine::RunFrame(ApplicationWindowInputs& windowInputs)
+    {
+        m_DebugToolbox.StartFrame();
+        m_MainWindow.PollInputs(windowInputs);
 
-        ApplicationWindowInputs mainWindowInputs{};
-        while (!mainWindowInputs.shouldCloseWindow)
-        {
-            auto frameStartTime = SteadyClock::now();
+        //Update
 
-            debugToolbox.StartFrame();
-            mainWindow.PollInputs(mainWindowInputs);
+        m_GraphicsContext.Render();
+        m_DebugToolbox.EndFrame();
 
-            //Update
-
-            graphicsContext.Render();
-            debugToolbox.EndFrame();
-
-            mainWindow.SwapBuffer();
-
-            auto frameDuration{ std::chrono::duration_cast<decltype(targetFrameLength)>(SteadyClock::now() - frameStartTime)};
-            if (frameDuration < targetFrameLength)
-            {
-                std::this_thread::sleep_for(targetFrameLength - frameDuration);
-            }
-        }
-
-        debugToolbox.Shutdown();
-        graphicsContext.Shutdown();
-        mainWindow.Shutdown();
+        m_MainWindow.SwapBuffer();
     }
 }

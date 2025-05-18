@@ -4,5 +4,6 @@
 int main()
 {
     silk::EngineConfig engineConfig{ 30 };
-    silk::RunEngine(engineConfig);
+    silk::Engine engine{ engineConfig };
+    engine.Run();
 }
