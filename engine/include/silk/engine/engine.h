@@ -6,14 +6,19 @@
 #include <silk/engine/frame_rate/frame_rate_timer.h>
 #include <silk/engine/window/application_window.h>
 
+#include <vector>
+
 namespace silk
 {
+    class ModuleEntryPoints;
     struct EngineConfig;
 
     class Engine
     {
     public:
         Engine(const EngineConfig& config);
+
+        void PreInstallModule(ModuleEntryPoints* moduleEntryPoints);
 
         void Run();
 
@@ -28,5 +33,7 @@ namespace silk
         GraphicsContext m_GraphicsContext;
         DebugToolbox m_DebugToolbox;
         FrameRateTimer m_FrameRateTimer;
+
+        std::vector<ModuleEntryPoints*> m_Modules;
     };
 }

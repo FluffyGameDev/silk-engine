@@ -1,5 +1,6 @@
 #include <silk/engine/engine.h>
 
+#include <silk/engine/module/module_entry_points.h>
 #include <silk/engine/window/application_window_config.h>
 #include <silk/engine/window/application_window_inputs.h>
 
@@ -12,6 +13,11 @@ namespace silk
         , m_DebugToolbox{}
         , m_FrameRateTimer{ config.targetFps }
     {
+    }
+
+    void Engine::PreInstallModule(ModuleEntryPoints* moduleEntryPoints)
+    {
+        m_Modules.push_back(moduleEntryPoints);
     }
 
     void Engine::Run()
@@ -39,10 +45,20 @@ namespace silk
         m_MainWindow.Init(mainWindowConfig);
         m_GraphicsContext.Init();
         m_DebugToolbox.Init(m_MainWindow);
+
+        for (ModuleEntryPoints* moduleEntryPoints : m_Modules)
+        {
+            moduleEntryPoints->Install(*this);
+        }
     }
 
     void Engine::Shutdown()
     {
+        for (auto moduleIt = m_Modules.rbegin(); moduleIt != m_Modules.rend(); ++moduleIt)
+        {
+            (*moduleIt)->Uninstall(*this);
+        }
+
         m_DebugToolbox.Shutdown();
         m_GraphicsContext.Shutdown();
         m_MainWindow.Shutdown();
