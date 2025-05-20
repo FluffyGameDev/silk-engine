@@ -6,4 +6,5 @@ list(APPEND CMAKE_PREFIX_PATH "${SILK_ROOT_DIR}/cmake/modules")
 project("silk")
 
 add_subdirectory(engine)
+add_subdirectory(modules/runtime)
 add_subdirectory(sandbox)
