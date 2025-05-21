@@ -11,6 +11,7 @@
 namespace silk
 {
     class ModuleEntryPoints;
+    class Service;
     struct EngineConfig;
 
     class Engine
@@ -19,6 +20,9 @@ namespace silk
         Engine(const EngineConfig& config);
 
         void PreInstallModule(ModuleEntryPoints* moduleEntryPoints);
+
+        void RegisterService(Service* service);
+        void UnregisterService(Service* service);
 
         void Run();
 
@@ -35,5 +39,6 @@ namespace silk
         FrameRateTimer m_FrameRateTimer;
 
         std::vector<ModuleEntryPoints*> m_Modules;
+        std::vector<Service*> m_Services;
     };
 }

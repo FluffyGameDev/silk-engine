@@ -1,8 +1,12 @@
 #include <silk/engine/engine.h>
 
+#include <algorithm>
+
 #include <silk/engine/module/module_entry_points.h>
+#include <silk/engine/service/service.h>
 #include <silk/engine/window/application_window_config.h>
 #include <silk/engine/window/application_window_inputs.h>
+
 
 namespace silk
 {
@@ -18,6 +22,20 @@ namespace silk
     void Engine::PreInstallModule(ModuleEntryPoints* moduleEntryPoints)
     {
         m_Modules.push_back(moduleEntryPoints);
+    }
+
+    void Engine::RegisterService(Service* service)
+    {
+        m_Services.push_back(service);
+    }
+
+    void Engine::UnregisterService(Service* service)
+    {
+        auto removeIt{ std::remove(m_Services.begin(), m_Services.end(), service)};
+        if (removeIt != m_Services.end())
+        {
+            m_Services.erase(removeIt);
+        }
     }
 
     void Engine::Run()
@@ -50,10 +68,20 @@ namespace silk
         {
             moduleEntryPoints->Install(*this);
         }
+
+        for (Service* service : m_Services)
+        {
+            service->Init(*this);
+        }
     }
 
     void Engine::Shutdown()
     {
+        for (auto serviceIt = m_Services.rbegin(); serviceIt != m_Services.rend(); ++serviceIt)
+        {
+            (*serviceIt)->Shutdown(*this);
+        }
+
         for (auto moduleIt = m_Modules.rbegin(); moduleIt != m_Modules.rend(); ++moduleIt)
         {
             (*moduleIt)->Uninstall(*this);
