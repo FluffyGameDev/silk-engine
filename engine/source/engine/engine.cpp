@@ -31,10 +31,11 @@ namespace silk
 
     void Engine::UnregisterService(Service* service)
     {
-        auto removeIt{ std::remove(m_Services.begin(), m_Services.end(), service)};
-        if (removeIt != m_Services.end())
+        auto endIt{ m_Services.end() };
+        auto removeIt{ std::remove(m_Services.begin(), endIt, service)};
+        if (removeIt != endIt)
         {
-            m_Services.erase(removeIt);
+            m_Services.erase(removeIt, endIt);
         }
     }
 
