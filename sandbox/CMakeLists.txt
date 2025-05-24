@@ -2,6 +2,8 @@
 
 set(SILK_SANDBOX_SOURCE
     "source/silk_sandbox.cpp"
+    "source/sandbox_debug_tool.cpp"
+    "source/sandbox_module_entry_points.cpp"
 )
 
 add_executable(SilkSandbox ${SILK_SANDBOX_SOURCE})

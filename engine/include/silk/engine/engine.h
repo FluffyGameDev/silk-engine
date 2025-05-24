@@ -26,6 +26,8 @@ namespace silk
 
         void Run();
 
+        inline DebugToolbox& GetDebugToolbox() { return m_DebugToolbox; }
+
     private:
         void Init();
         void Shutdown();

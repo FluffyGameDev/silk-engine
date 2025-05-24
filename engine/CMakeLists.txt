@@ -15,7 +15,7 @@ set_property(TARGET SilkEngine PROPERTY CXX_STANDARD 20)
 set_property(TARGET SilkEngine PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET SilkEngine PROPERTY COMPILE_WARNING_AS_ERROR ON)
 
-target_compile_options(SilkEngine PRIVATE
+target_compile_options(SilkEngine PUBLIC
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
@@ -31,6 +31,7 @@ target_compile_definitions(SilkEngine PUBLIC SILK_GRAPHICS_DEBUGGING)
 find_package(glad)
 find_package(glfw)
 find_package(imgui)
-target_link_libraries(SilkEngine PRIVATE glad glfw imgui)
+target_link_libraries(SilkEngine PRIVATE glad glfw)
+target_link_libraries(SilkEngine PUBLIC imgui)
 
 add_library(silk::engine ALIAS SilkEngine)
