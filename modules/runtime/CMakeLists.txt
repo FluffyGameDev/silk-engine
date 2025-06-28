@@ -9,6 +9,11 @@ set_property(TARGET SilkRuntime PROPERTY CXX_STANDARD 20)
 set_property(TARGET SilkRuntime PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET SilkRuntime PROPERTY COMPILE_WARNING_AS_ERROR ON)
 
+target_compile_options(SilkRuntime PUBLIC
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
+
 target_include_directories(SilkRuntime PUBLIC include)
 
 target_link_libraries(SilkRuntime PRIVATE silk::engine)

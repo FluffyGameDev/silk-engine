@@ -12,4 +12,9 @@ set_property(TARGET SilkSandbox PROPERTY CXX_STANDARD 20)
 set_property(TARGET SilkSandbox PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET SilkSandbox PROPERTY COMPILE_WARNING_AS_ERROR ON)
 
+target_compile_options(SilkSandbox PUBLIC
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
+
 target_link_libraries(SilkSandbox PRIVATE silk::engine silk::runtime)
