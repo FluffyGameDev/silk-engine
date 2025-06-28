@@ -24,10 +24,10 @@ namespace silk
         void Disconnect(SlotType& slot)
         {
             auto endIt{ m_ConnectedSlots.end() };
-            auto foundIt = std::remove(m_ConnectedSlots.begin(), endIt, &slot);
-            if (foundIt != endIt)
+            auto removeIt = std::remove(m_ConnectedSlots.begin(), endIt, &slot);
+            if (removeIt != endIt)
             {
-                m_ConnectedSlots.erase(endIt);
+                m_ConnectedSlots.erase(removeIt, endIt);
             }
         }
 
