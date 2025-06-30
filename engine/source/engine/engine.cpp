@@ -99,7 +99,7 @@ namespace silk
         m_DebugToolbox.StartFrame();
         m_MainWindow.PollInputs(windowInputs);
 
-        //Update
+        m_UpdateSignal.Raise();
 
         m_GraphicsContext.Render();
         m_DebugToolbox.EndFrame();

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <silk/core/signal.h>
 #include <silk/engine/engine_config.h>
 #include <silk/engine/debug/debug_toolbox.h>
 #include <silk/engine/graphics/graphics_context.h>
@@ -28,6 +29,8 @@ namespace silk
 
         inline DebugToolbox& GetDebugToolbox() { return m_DebugToolbox; }
 
+        inline Signal<void()>& GetUpdateSignal() { return m_UpdateSignal; }
+
     private:
         void Init();
         void Shutdown();
@@ -39,6 +42,8 @@ namespace silk
         GraphicsContext m_GraphicsContext;
         DebugToolbox m_DebugToolbox;
         FrameRateTimer m_FrameRateTimer;
+
+        Signal<void()> m_UpdateSignal;
 
         std::vector<ModuleEntryPoints*> m_Modules;
         std::vector<Service*> m_Services;
