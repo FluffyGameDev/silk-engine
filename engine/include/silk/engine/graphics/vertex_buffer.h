@@ -10,6 +10,7 @@ namespace silk
     {
     public:
         VertexBuffer(const void* vertexData, size_t vertexDataSize);
+        VertexBuffer(VertexBuffer&& other);
         ~VertexBuffer();
 
         void Bind() const;

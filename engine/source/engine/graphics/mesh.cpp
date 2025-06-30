@@ -42,7 +42,7 @@ namespace silk
                 case VertexDataType::Float3: return 3 * sizeof(float);
                 case VertexDataType::Float4: return 4 * sizeof(float);
             }
-            return GL_INVALID_ENUM;
+            return 0;
         }
     }
 

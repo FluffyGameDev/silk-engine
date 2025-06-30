@@ -11,6 +11,12 @@ namespace silk
         glBufferData(GL_ARRAY_BUFFER, vertexDataSize, vertexData, GL_STATIC_DRAW);
     }
 
+    VertexBuffer::VertexBuffer(VertexBuffer&& other)
+    {
+        m_VertexBufferId = other.m_VertexBufferId;
+        other.m_VertexBufferId = 0;
+    }
+
     VertexBuffer::~VertexBuffer()
     {
         glDeleteBuffers(1, &m_VertexBufferId);
