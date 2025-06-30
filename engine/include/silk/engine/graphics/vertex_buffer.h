@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <silk/core/types.h>
 
 namespace silk
@@ -7,8 +9,8 @@ namespace silk
     class VertexBuffer
     {
     public:
-        void Create(const void* vertexData, size_t vertexDataSize);
-        void Destroy();
+        VertexBuffer(const void* vertexData, size_t vertexDataSize);
+        ~VertexBuffer();
 
         void Bind() const;
         void Unbind() const;

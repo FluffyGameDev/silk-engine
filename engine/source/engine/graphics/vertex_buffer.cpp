@@ -4,14 +4,14 @@
 
 namespace silk
 {
-    void VertexBuffer::Create(const void* vertexData, size_t vertexDataSize)
+    VertexBuffer::VertexBuffer(const void* vertexData, size_t vertexDataSize)
     {
         glGenBuffers(1, &m_VertexBufferId);
         glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferId);
         glBufferData(GL_ARRAY_BUFFER, vertexDataSize, vertexData, GL_STATIC_DRAW);
     }
 
-    void VertexBuffer::Destroy()
+    VertexBuffer::~VertexBuffer()
     {
         glDeleteBuffers(1, &m_VertexBufferId);
     }
