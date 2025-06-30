@@ -8,7 +8,8 @@ namespace silk
         void Init();
         void Shutdown();
 
-        void Render();
+        void StartFrame();
+        void EndFrame();
 
     private:
     };
