@@ -2,6 +2,8 @@
 
 namespace silk
 {
+    class Mesh;
+
     class GraphicsContext
     {
     public:
@@ -10,6 +12,8 @@ namespace silk
 
         void StartFrame();
         void EndFrame();
+
+        void DrawMesh(const Mesh& mesh) const;
 
     private:
     };

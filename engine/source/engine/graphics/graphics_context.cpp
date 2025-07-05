@@ -5,6 +5,7 @@
 
 #include <silk/core/log.h>
 #include <silk/core/log_categories.h>
+#include <silk/engine/graphics/mesh.h>
 
 namespace silk
 {
@@ -53,5 +54,12 @@ namespace silk
 
     void GraphicsContext::EndFrame()
     {
+    }
+
+    void GraphicsContext::DrawMesh(const Mesh& mesh) const
+    {
+        mesh.Bind();
+        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mesh.GetVertexCount());
+        mesh.Unbind();
     }
 }

@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 
+#include <silk/core/assert.h>
+
 namespace silk
 {
     namespace internal
@@ -46,6 +48,14 @@ namespace silk
         }
     }
 
+    Mesh::Mesh()
+        : m_Buffers{}
+        , m_VertexArrayId{}
+        , m_VertexAttributionCount{}
+        , m_VertexCount{}
+    {
+    }
+
     void Mesh::Create()
     {
         glGenVertexArrays(1, &m_VertexArrayId);
@@ -77,6 +87,11 @@ namespace silk
         {
             stride += internal::GetDataTypeSize(dataTypes[i]);
         }
+
+        u32 vertexCount{ (u32)(vertexDataSize / stride) };
+        SILK_ASSERT(m_VertexCount == 0 || m_VertexCount == vertexCount, "Incorrect vertex count in mesh (expected: 0 or %d, got: %d).", m_VertexCount, vertexCount);
+        SILK_ASSERT(vertexCount * stride == vertexDataSize, "Incorrect mesh vertex data size (expected: %d, got: %d).", vertexDataSize, vertexCount * stride);
+        m_VertexCount = vertexCount;
 
         size_t offset{};
         for (size_t i = 0; i < dataTypeCount; ++i)
