@@ -19,7 +19,7 @@ namespace silk
     class Mesh
     {
     public:
-        Mesh();
+        Mesh() = default;
 
         void Create();
         void Destroy();

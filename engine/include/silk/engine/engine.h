@@ -27,6 +27,7 @@ namespace silk
 
         void Run();
 
+        inline GraphicsContext& GetGraphicsContext() { return m_GraphicsContext; }
         inline DebugToolbox& GetDebugToolbox() { return m_DebugToolbox; }
 
         inline Signal<void()>& GetUpdateSignal() { return m_UpdateSignal; }

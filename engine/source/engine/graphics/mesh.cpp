@@ -48,14 +48,6 @@ namespace silk
         }
     }
 
-    Mesh::Mesh()
-        : m_Buffers{}
-        , m_VertexArrayId{}
-        , m_VertexAttributionCount{}
-        , m_VertexCount{}
-    {
-    }
-
     void Mesh::Create()
     {
         glGenVertexArrays(1, &m_VertexArrayId);
