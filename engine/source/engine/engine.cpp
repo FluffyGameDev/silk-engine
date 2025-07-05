@@ -101,6 +101,7 @@ namespace silk
         m_MainWindow.PollInputs(windowInputs);
 
         m_UpdateSignal.Raise();
+        m_DrawSignal.Raise(m_GraphicsContext);
 
         m_GraphicsContext.EndFrame();
         m_DebugToolbox.EndFrame();
