@@ -5,6 +5,8 @@
 #include <sstream>
 #include <vector>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <silk/core/log.h>
 #include <silk/core/log_categories.h>
@@ -81,5 +83,41 @@ namespace silk
     void Shader::Unbind() const
     {
         glUseProgram(0);
+    }
+
+    void Shader::SetUniform(const char* uniformName, s32 value)
+    {
+        GLuint uniformID = glGetUniformLocation(m_ShaderProgramId, uniformName);
+        glUniform1i(uniformID, value);
+    }
+
+    void Shader::SetUniform(const char* uniformName, f32 value)
+    {
+        GLuint uniformID = glGetUniformLocation(m_ShaderProgramId, uniformName);
+        glUniform1f(uniformID, value);
+    }
+
+    void Shader::SetUniform(const char* uniformName, const glm::vec2& vector)
+    {
+        GLuint uniformID = glGetUniformLocation(m_ShaderProgramId, uniformName);
+        glUniform2f(uniformID, vector.x, vector.y);
+    }
+
+    void Shader::SetUniform(const char* uniformName, const glm::vec3& vector)
+    {
+        GLuint uniformID = glGetUniformLocation(m_ShaderProgramId, uniformName);
+        glUniform3f(uniformID, vector.x, vector.y, vector.z);
+    }
+
+    void Shader::SetUniform(const char* uniformName, const glm::vec4& vector)
+    {
+        GLuint uniformID = glGetUniformLocation(m_ShaderProgramId, uniformName);
+        glUniform4f(uniformID, vector.x, vector.y, vector.z, vector.w);
+    }
+
+    void Shader::SetUniform(const char* uniformName, const glm::mat4& matrix)
+    {
+        GLuint uniformID = glGetUniformLocation(m_ShaderProgramId, uniformName);
+        glUniformMatrix4fv(uniformID, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 }
