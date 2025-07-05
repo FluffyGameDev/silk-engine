@@ -27,9 +27,11 @@ namespace silk
 
         void Run();
 
+        inline GraphicsContext& GetGraphicsContext() { return m_GraphicsContext; }
         inline DebugToolbox& GetDebugToolbox() { return m_DebugToolbox; }
 
         inline Signal<void()>& GetUpdateSignal() { return m_UpdateSignal; }
+        inline Signal<void(GraphicsContext&)>& GetDrawSignal() { return m_DrawSignal; }
 
     private:
         void Init();
@@ -44,6 +46,7 @@ namespace silk
         FrameRateTimer m_FrameRateTimer;
 
         Signal<void()> m_UpdateSignal;
+        Signal<void(GraphicsContext&)> m_DrawSignal;
 
         std::vector<ModuleEntryPoints*> m_Modules;
         std::vector<Service*> m_Services;

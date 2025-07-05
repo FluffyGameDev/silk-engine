@@ -37,7 +37,7 @@ namespace silk
             {
                 if (slot->m_BoundFunction)
                 {
-                    slot->m_BoundFunction(std::forward(args)...);
+                    slot->m_BoundFunction(std::forward<TArgs>(args)...);
                 }
             }
         }
