@@ -30,9 +30,10 @@ target_compile_definitions(SilkEngine PUBLIC SILK_GRAPHICS_DEBUGGING)
 
 find_package(glad)
 find_package(glfw)
+find_package(glm)
 find_package(imgui)
 find_package(nlohmann_json)
 target_link_libraries(SilkEngine PRIVATE glad glfw nlohmann_json)
-target_link_libraries(SilkEngine PUBLIC imgui)
+target_link_libraries(SilkEngine PUBLIC glm::glm imgui)
 
 add_library(silk::engine ALIAS SilkEngine)
