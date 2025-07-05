@@ -41,6 +41,10 @@ namespace silk
         glEnable(GL_DEBUG_OUTPUT);
         glDebugMessageCallback(onGlDebugMessage, 0);
 #endif //SILK_GRAPHICS_DEBUGGING
+
+        m_ClearFlags = 0;
+        m_IsClearEnabled = false;
+        m_IsDepthTestEnabled = false;
     }
 
     void GraphicsContext::Shutdown()
