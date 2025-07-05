@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
+#include <glm/glm.hpp>
 
 #include <silk/core/log.h>
 #include <silk/core/log_categories.h>
@@ -40,21 +41,90 @@ namespace silk
         glEnable(GL_DEBUG_OUTPUT);
         glDebugMessageCallback(onGlDebugMessage, 0);
 #endif //SILK_GRAPHICS_DEBUGGING
+
+        m_ClearFlags = 0;
+        m_IsClearEnabled = false;
+        m_IsDepthTestEnabled = false;
     }
 
     void GraphicsContext::Shutdown()
     {
     }
 
+
+
     void GraphicsContext::StartFrame()
     {
-        glClearColor(0.0f, 0.0f, 0.0f,1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        if (m_IsClearEnabled)
+        {
+            glClear(m_ClearFlags);
+        }
     }
 
     void GraphicsContext::EndFrame()
     {
     }
+
+
+
+    void GraphicsContext::EnableScreenClear(const glm::vec3& color)
+    {
+        m_IsClearEnabled = true;
+        glClearColor(color.x, color.y, color.z, 1.0f);
+
+        RefreshClearFlags();
+    }
+
+    void GraphicsContext::DisableScreenClear()
+    {
+        m_IsClearEnabled = false;
+
+        RefreshClearFlags();
+    }
+
+    void GraphicsContext::EnableDepthTest(DepthTestFunction depthTestFunction)
+    {
+        m_IsDepthTestEnabled = true;
+        glEnable(GL_DEPTH_TEST);
+
+        GLenum functionValue{};
+        switch (depthTestFunction)
+        {
+            case DepthTestFunction::Always: { functionValue = GL_ALWAYS; break; }
+            case DepthTestFunction::Never: { functionValue = GL_NEVER; break; }
+            case DepthTestFunction::Equal: { functionValue = GL_EQUAL; break; }
+            case DepthTestFunction::NotEqual: { functionValue = GL_NOTEQUAL; break; }
+            case DepthTestFunction::Less: { functionValue = GL_LESS; break; }
+            case DepthTestFunction::Greater: { functionValue = GL_GREATER; break; }
+            case DepthTestFunction::LessOrEqual: { functionValue = GL_LEQUAL; break; }
+            case DepthTestFunction::GreaterOrEqual: { functionValue = GL_GEQUAL; break; }
+            default:
+            {
+                functionValue = GL_LESS;
+                SILK_LOG_ERROR(LogGraphics, "Incorrect depth test function (got: %d)", (u8)depthTestFunction);
+            }
+        }
+        glDepthFunc(GL_LESS);
+
+        RefreshClearFlags();
+    }
+
+    void GraphicsContext::DisabletDepthTest()
+    {
+        m_IsDepthTestEnabled = false;
+        glDisable(GL_DEPTH_TEST);
+
+        RefreshClearFlags();
+    }
+
+    void GraphicsContext::RefreshClearFlags()
+    {
+        m_ClearFlags = 0;
+        if (m_IsClearEnabled) { m_ClearFlags |= GL_COLOR_BUFFER_BIT; }
+        if (m_IsDepthTestEnabled) { m_ClearFlags |= GL_DEPTH_BUFFER_BIT; }
+    }
+
+
 
     void GraphicsContext::DrawMesh(const Mesh& mesh) const
     {
