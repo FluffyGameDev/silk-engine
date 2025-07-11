@@ -46,7 +46,6 @@ namespace silk
 #endif //SILK_GRAPHICS_DEBUGGING
 
         m_ClearFlags = 0;
-        m_IsClearEnabled = false;
         m_IsDepthTestEnabled = false;
     }
 
@@ -58,11 +57,6 @@ namespace silk
 
     void GraphicsContext::Render()
     {
-        if (m_IsClearEnabled)
-        {
-            glClear(m_ClearFlags);
-        }
-
         //TODO: order cameras by priority only when needed
         std::sort(m_RegisteredCameras.begin(), m_RegisteredCameras.end(),
             [](const Camera* lhs, const Camera* rhs) { return lhs->GetPriority() > rhs->GetPriority(); });
@@ -91,21 +85,6 @@ namespace silk
     }
 
 
-
-    void GraphicsContext::EnableScreenClear(const glm::vec3& color)
-    {
-        m_IsClearEnabled = true;
-        glClearColor(color.x, color.y, color.z, 1.0f);
-
-        RefreshClearFlags();
-    }
-
-    void GraphicsContext::DisableScreenClear()
-    {
-        m_IsClearEnabled = false;
-
-        RefreshClearFlags();
-    }
 
     void GraphicsContext::EnableDepthTest(DepthTestFunction depthTestFunction)
     {
@@ -144,12 +123,17 @@ namespace silk
 
     void GraphicsContext::RefreshClearFlags()
     {
-        m_ClearFlags = 0;
-        if (m_IsClearEnabled) { m_ClearFlags |= GL_COLOR_BUFFER_BIT; }
+        m_ClearFlags = GL_COLOR_BUFFER_BIT;
         if (m_IsDepthTestEnabled) { m_ClearFlags |= GL_DEPTH_BUFFER_BIT; }
     }
 
 
+
+    void GraphicsContext::ClearScreen(const glm::vec3& color) const
+    {
+        glClearColor(color.x, color.y, color.z, 0.0f);
+        glClear(m_ClearFlags);
+    }
 
     void GraphicsContext::DrawMesh(const Mesh& mesh) const
     {

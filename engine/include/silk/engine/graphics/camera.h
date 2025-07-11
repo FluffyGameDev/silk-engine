@@ -18,6 +18,9 @@ namespace silk
 
         void Draw(GraphicsContext& context) const;
 
+        void EnableScreenClear(const glm::vec3& color);
+        void DisableScreenClear();
+
         inline const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
         inline const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
         inline Signal<void(GraphicsContext&, const Camera&)>& GetDrawSignal() { return m_DrawSignal; }
@@ -27,7 +30,9 @@ namespace silk
     private:
         glm::mat4 m_ProjectionMatrix;
         glm::mat4 m_ViewMatrix;
+        glm::vec3 m_ClearColor;
         Signal<void(GraphicsContext&, const Camera&)> m_DrawSignal;
         u32 m_Priority;
+        bool m_IsClearEnabled;
     };
 }

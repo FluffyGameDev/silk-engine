@@ -36,11 +36,10 @@ namespace silk
         void RegisterCamera(const Camera& camera);
         void UnregisterCamera(const Camera& camera);
 
-        void EnableScreenClear(const glm::vec3& color);
-        void DisableScreenClear();
         void EnableDepthTest(DepthTestFunction depthTestFunction);
         void DisableDepthTest();
 
+        void ClearScreen(const glm::vec3& color) const;
         void DrawMesh(const Mesh& mesh) const;
 
     private:
@@ -48,7 +47,6 @@ namespace silk
 
         std::vector<const Camera*> m_RegisteredCameras;
         u32 m_ClearFlags;
-        bool m_IsClearEnabled;
         bool m_IsDepthTestEnabled;
     };
 }

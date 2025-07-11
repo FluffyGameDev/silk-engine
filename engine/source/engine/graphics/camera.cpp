@@ -2,6 +2,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <silk/engine/graphics/graphics_context.h>
+
 namespace silk
 {
 
@@ -20,9 +22,28 @@ namespace silk
         m_ViewMatrix = glm::lookAt(from, to, up);
     }
 
+
+
     void Camera::Draw(GraphicsContext& context) const
     {
+        if (m_IsClearEnabled)
+        {
+            context.ClearScreen(m_ClearColor);
+        }
+
         m_DrawSignal.Raise(context, *this);
     }
 
+
+
+    void Camera::EnableScreenClear(const glm::vec3& color)
+    {
+        m_IsClearEnabled = true;
+        m_ClearColor = color;
+    }
+
+    void Camera::DisableScreenClear()
+    {
+        m_IsClearEnabled = false;
+    }
 }
