@@ -31,7 +31,7 @@ namespace silk
             }
         }
 
-        void Raise(TArgs... args)
+        void Raise(TArgs... args) const
         {
             for (auto* slot : m_ConnectedSlots)
             {
