@@ -97,13 +97,11 @@ namespace silk
     {
         m_FrameRateTimer.StartFrame();
         m_DebugToolbox.StartFrame();
-        m_GraphicsContext.StartFrame();
         m_MainWindow.PollInputs(windowInputs);
 
         m_UpdateSignal.Raise();
-        m_DrawSignal.Raise(m_GraphicsContext);
+        m_GraphicsContext.Render();
 
-        m_GraphicsContext.EndFrame();
         m_DebugToolbox.EndFrame();
 
         m_MainWindow.SwapBuffer();

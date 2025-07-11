@@ -1,11 +1,14 @@
 #include <silk/engine/graphics/graphics_context.h>
 
+#include <algorithm>
+
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <glm/glm.hpp>
 
 #include <silk/core/log.h>
 #include <silk/core/log_categories.h>
+#include <silk/engine/graphics/camera.h>
 #include <silk/engine/graphics/mesh.h>
 
 namespace silk
@@ -53,16 +56,38 @@ namespace silk
 
 
 
-    void GraphicsContext::StartFrame()
+    void GraphicsContext::Render()
     {
         if (m_IsClearEnabled)
         {
             glClear(m_ClearFlags);
         }
+
+        //TODO: order cameras by priority only when needed
+        std::sort(m_RegisteredCameras.begin(), m_RegisteredCameras.end(),
+            [](const Camera* lhs, const Camera* rhs) { return lhs->GetPriority() > rhs->GetPriority(); });
+
+        for (const Camera* camera : m_RegisteredCameras)
+        {
+            camera->Draw(*this);
+        }
     }
 
-    void GraphicsContext::EndFrame()
+
+
+    void GraphicsContext::RegisterCamera(const Camera& camera)
     {
+        m_RegisteredCameras.push_back(&camera);
+    }
+
+    void GraphicsContext::UnregisterCamera(const Camera& camera)
+    {
+        auto endIt{ m_RegisteredCameras.end() };
+        auto remIt{ std::remove(m_RegisteredCameras.begin(), endIt, &camera) };
+        if (remIt != endIt)
+        {
+            m_RegisteredCameras.erase(remIt, endIt);
+        }
     }
 
 
@@ -109,7 +134,7 @@ namespace silk
         RefreshClearFlags();
     }
 
-    void GraphicsContext::DisabletDepthTest()
+    void GraphicsContext::DisableDepthTest()
     {
         m_IsDepthTestEnabled = false;
         glDisable(GL_DEPTH_TEST);
