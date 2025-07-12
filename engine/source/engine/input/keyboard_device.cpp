@@ -18,8 +18,8 @@ namespace silk
         window.GetKeyboardInputSignal().Disconnect(m_OnKeyInputSlot);
     }
 
-    void KeyboardDevice::OnkeyInput(InputId /*inputId*/, bool /*isPressed*/)
+    void KeyboardDevice::OnkeyInput(InputId inputId, bool isPressed)
     {
-
+        m_ButtonInputStateChanged.Raise(inputId, isPressed);
     }
 }

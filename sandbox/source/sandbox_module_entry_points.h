@@ -14,6 +14,7 @@
 namespace silk
 {
     class GraphicsContext;
+    class InputService;
 }
 
 namespace silk::sandbox
@@ -38,5 +39,8 @@ namespace silk::sandbox
         Texture m_Texture;
 
         KeyboardDevice m_KeyboardDevice;
+
+        const InputService* m_InputService;
+        float m_Value;
     };
 }

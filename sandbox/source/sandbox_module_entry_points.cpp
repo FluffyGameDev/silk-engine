@@ -10,6 +10,8 @@ namespace silk::sandbox
 {
     void SandboxModuleEntryPoints::Install(Engine& engine)
     {
+        m_InputService = &engine.GetInputService();
+
         engine.GetDebugToolbox().RegisterTool(&m_SandboxDebugTool);
 
         m_KeyboardDevice.Init(engine.GetMainWindow());
@@ -123,7 +125,18 @@ namespace silk::sandbox
 
     void SandboxModuleEntryPoints::OnDraw(GraphicsContext& context, const Camera& camera)
     {
+        if (m_InputService->IsButtonDown(InputId::KeyLeft))
+        {
+            m_Value -= 0.1f;
+        }
+        if (m_InputService->IsButtonDown(InputId::KeyRight))
+        {
+            m_Value += 0.1f;
+        }
+
         glm::mat4 Model = glm::mat4(1.0f);
+        Model = glm::rotate(Model, m_Value, glm::vec3{ 0.0f, 1.0f, 0.0f });
+
         glm::mat4 mvp = camera.GetProjectionMatrix() * camera .GetViewMatrix() * Model;
 
         m_Shader.Bind();

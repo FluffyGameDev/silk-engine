@@ -99,6 +99,7 @@ namespace silk
     {
         m_FrameRateTimer.StartFrame();
         m_DebugToolbox.StartFrame();
+        m_InputService.SwapStateBuffers();
         m_MainWindow.PollInputs(windowInputs);
 
         m_UpdateSignal.Raise();
