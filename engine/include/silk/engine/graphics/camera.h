@@ -13,7 +13,7 @@ namespace silk
     {
     public:
         void ConfigurePerspective(float fov, float aspectRatio, float near, float far);
-        void ConfigureOrthographic(float left, float top, float width, float height);
+        void ConfigureOrthographic(float left, float right, float bottom, float top);
         void LookAt(const glm::vec3& from, const glm::vec3& to, const glm::vec3& up);
 
         void Draw(GraphicsContext& context) const;

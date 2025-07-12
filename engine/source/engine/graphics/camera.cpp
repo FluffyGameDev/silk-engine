@@ -15,6 +15,7 @@ namespace silk
     void Camera::ConfigureOrthographic(float left, float right, float bottom, float top)
     {
         m_ProjectionMatrix = glm::ortho(left, right, bottom, top);
+        m_ViewMatrix = glm::mat4(1.0f);
     }
 
     void Camera::LookAt(const glm::vec3& from, const glm::vec3& to, const glm::vec3& up)
