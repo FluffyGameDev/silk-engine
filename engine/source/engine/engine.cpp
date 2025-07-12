@@ -62,6 +62,7 @@ namespace silk
         };
 
         m_MainWindow.Init(mainWindowConfig);
+        m_InputService.Init();
         m_GraphicsContext.Init();
         m_DebugToolbox.Init(m_MainWindow);
 
@@ -90,6 +91,7 @@ namespace silk
 
         m_DebugToolbox.Shutdown();
         m_GraphicsContext.Shutdown();
+        m_InputService.Shutdown();
         m_MainWindow.Shutdown();
     }
 

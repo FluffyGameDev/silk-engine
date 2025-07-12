@@ -22,5 +22,6 @@ namespace silk
 {
     SILK_DEFINE_LOG_CATEGORY(LogCore, "CORE");
     SILK_DEFINE_LOG_CATEGORY(LogGraphics, "GRAPHICS");
+    SILK_DEFINE_LOG_CATEGORY(LogInput, "INPUT");
     SILK_DEFINE_LOG_CATEGORY(LogWindow, "WINDOW");
 }

@@ -4,12 +4,16 @@
 
 #include <silk/engine/engine.h>
 #include <silk/engine/graphics/vertex_buffer.h>
+#include <silk/engine/input/keyboard_device.h>
 
 namespace silk::sandbox
 {
     void SandboxModuleEntryPoints::Install(Engine& engine)
     {
         engine.GetDebugToolbox().RegisterTool(&m_SandboxDebugTool);
+
+        m_KeyboardDevice.Init(engine.GetMainWindow());
+        engine.GetInputService().RegisterDevice(m_KeyboardDevice);
 
         m_Camera.SetPriority(1);
         m_Camera.EnableScreenClear({});
@@ -104,6 +108,9 @@ namespace silk::sandbox
 
     void SandboxModuleEntryPoints::Uninstall(Engine& engine)
     {
+        engine.GetInputService().UnregisterDevice(m_KeyboardDevice);
+        m_KeyboardDevice.Shutdown(engine.GetMainWindow());
+
         m_Texture.Destroy();
         m_Mesh.Destroy();
         m_Shader.Destroy();

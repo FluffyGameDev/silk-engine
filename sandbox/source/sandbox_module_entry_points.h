@@ -7,6 +7,7 @@
 #include <silk/engine/graphics/mesh.h>
 #include <silk/engine/graphics/shader.h>
 #include <silk/engine/graphics/texture.h>
+#include <silk/engine/input/keyboard_device.h>
 
 #include "sandbox_debug_tool.h"
 
@@ -35,5 +36,7 @@ namespace silk::sandbox
         Shader m_Shader;
         Mesh m_Mesh;
         Texture m_Texture;
+
+        KeyboardDevice m_KeyboardDevice;
     };
 }
