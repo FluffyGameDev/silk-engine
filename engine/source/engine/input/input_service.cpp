@@ -6,6 +6,7 @@
 
 namespace silk
 {
+
     void InputService::Init()
     {
         m_CurrentInputStateIndex = 0;
@@ -52,14 +53,22 @@ namespace silk
 
     void InputService::RegisterDevice(InputDevice& device)
     {
+        for (const auto& entry : m_Devices)
+        {
+            if (entry->device->m_DeviceId.data.deviceType == device.m_DeviceId.data.deviceType)
+            {
+                device.m_DeviceId.data.deviceNumber = std::max<u8>(device.m_DeviceId.data.deviceNumber, entry->device->m_DeviceId.data.deviceNumber + 1);
+            }
+        }
+
         auto& entry{ m_Devices.emplace_back() };
         entry = std::make_unique<InputDeviceEntry>();
         entry->device = &device;
         entry->analogInputStateChangedSlot.SetBoundFunction([this](InputId inputId, float state) { OnAnalogInputStateChanged(inputId, state); });
         entry->buttonInputStateChangedSlot.SetBoundFunction([this](InputId inputId, bool isPressed) { OnButtonInputStateChanged(inputId, isPressed); });
 
-        device.GetAnalogInputStateChanged().Connect(entry->analogInputStateChangedSlot);
-        device.GetButtonInputStateChanged().Connect(entry->buttonInputStateChangedSlot);
+        device.m_AnalogInputStateChanged.Connect(entry->analogInputStateChangedSlot);
+        device.m_ButtonInputStateChanged.Connect(entry->buttonInputStateChangedSlot);
     }
 
     void InputService::UnregisterDevice(InputDevice& device)
@@ -69,8 +78,8 @@ namespace silk
             [&device](const auto& entry) { return entry->device == &device; }) };
         if (foundit != endIt)
         {
-            device.GetButtonInputStateChanged().Disconnect((*foundit)->buttonInputStateChangedSlot);
-            device.GetAnalogInputStateChanged().Disconnect((*foundit)->analogInputStateChangedSlot);
+            device.m_ButtonInputStateChanged.Disconnect((*foundit)->buttonInputStateChangedSlot);
+            device.m_AnalogInputStateChanged.Disconnect((*foundit)->analogInputStateChangedSlot);
             m_Devices.erase(foundit);
         }
     }
@@ -90,8 +99,8 @@ namespace silk
 
     InputService::InputDeviceEntry::~InputDeviceEntry()
     {
-        device->GetAnalogInputStateChanged().Disconnect(analogInputStateChangedSlot);
-        device->GetButtonInputStateChanged().Disconnect(buttonInputStateChangedSlot);
+        device->m_AnalogInputStateChanged.Disconnect(analogInputStateChangedSlot);
+        device->m_ButtonInputStateChanged.Disconnect(buttonInputStateChangedSlot);
     }
 
 }

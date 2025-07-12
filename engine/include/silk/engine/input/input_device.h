@@ -10,14 +10,15 @@ namespace silk
     class InputDevice
     {
     public:
+        InputDevice() = default;
         virtual ~InputDevice() = default;
-
-        Signal<void(InputId, float)>& GetAnalogInputStateChanged() { return m_AnalogInputStateChanged; }
-        Signal<void(InputId, bool)>& GetButtonInputStateChanged() { return m_ButtonInputStateChanged; }
 
     protected:
         Signal<void(InputId, float)> m_AnalogInputStateChanged;
         Signal<void(InputId, bool)> m_ButtonInputStateChanged;
+        InputDeviceId m_DeviceId;
+
+        friend class InputService;
     };
 
 }

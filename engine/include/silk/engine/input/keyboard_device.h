@@ -9,6 +9,8 @@ namespace silk
     class KeyboardDevice : public InputDevice
     {
     public:
+        KeyboardDevice();
+
         void Init(ApplicationWindow& window);
         void Shutdown(ApplicationWindow& window);
 

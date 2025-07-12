@@ -7,6 +7,13 @@
 namespace silk
 {
 
+    KeyboardDevice::KeyboardDevice()
+        : InputDevice{}
+        , m_OnKeyInputSlot{}
+    {
+        m_DeviceId.data.deviceType = InputDeviceType::Keyboard;
+    }
+
     void KeyboardDevice::Init(ApplicationWindow& window)
     {
         m_OnKeyInputSlot.SetBoundFunction([this](InputId inputId, bool isPressed) { OnkeyInput(inputId, isPressed); });

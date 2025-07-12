@@ -5,6 +5,24 @@
 namespace silk
 {
 
+    enum class InputDeviceType : u8
+    {
+        Keyboard,
+        Mouse,
+        Gamepad,
+        Other,
+    };
+
+    union InputDeviceId
+    {
+        struct
+        {
+            InputDeviceType deviceType;
+            u8 deviceNumber;
+        } data;
+        u16 deviceId;
+    };
+
     enum class InputId : u32
     {
         KeySpace,
