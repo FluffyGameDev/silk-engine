@@ -8,6 +8,8 @@
 #include <silk/engine/window/application_window_config.h>
 #include <silk/engine/window/application_window_inputs.h>
 
+#include "input_code_converter.h"
+
 namespace silk
 {
     static void OnKeyCallback(GLFWwindow*, int, int, int, int);
@@ -70,7 +72,8 @@ namespace silk
 
         if (action == GLFW_PRESS || action == GLFW_RELEASE)
         {
-            appWindow->GetKeyboardInputSignal().Raise((InputId)key, action == GLFW_PRESS);
+            InputId inputId { input::ConvertedGlfwKeyToInputId(key) };
+            appWindow->GetKeyboardInputSignal().Raise(inputId, action == GLFW_PRESS);
         }
     }
 }
