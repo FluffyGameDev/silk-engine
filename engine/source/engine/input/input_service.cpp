@@ -30,6 +30,8 @@ namespace silk
         const auto& prevState{ m_InputStates[m_CurrentInputStateIndex] };
         m_CurrentInputStateIndex = (m_CurrentInputStateIndex + 1) % INPUT_STATE_BUFFER_COUNT;
         m_InputStates[m_CurrentInputStateIndex] = prevState;
+
+        m_InputActionWatcher.Update(*this);
     }
 
     bool InputService::IsButtonDown(InputId inputId) const

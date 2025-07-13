@@ -101,6 +101,7 @@ namespace silk
         m_DebugToolbox.StartFrame();
         m_InputService.SwapStateBuffers();
         m_MainWindow.PollInputs(windowInputs);
+        m_InputService.GetInputActionWatcher().Update(m_InputService);
 
         m_UpdateSignal.Raise();
         m_GraphicsContext.Render();

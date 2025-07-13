@@ -6,6 +6,7 @@
 
 #include <silk/core/slot.h>
 #include <silk/engine/input/input_device.h>
+#include <silk/engine/input/actions/input_action_watcher.h>
 
 namespace silk
 {
@@ -20,6 +21,8 @@ namespace silk
         void Shutdown();
 
         void SwapStateBuffers();
+
+        inline InputActionWatcher& GetInputActionWatcher() { return m_InputActionWatcher; }
 
         bool IsButtonDown(InputId inputId) const;
         bool IsButtonPressed(InputId inputId) const;
@@ -44,10 +47,10 @@ namespace silk
 
         static constexpr size_t INPUT_STATE_BUFFER_COUNT{ 2 };
 
+        InputActionWatcher m_InputActionWatcher;
         std::vector<std::unique_ptr<InputDeviceEntry>> m_Devices;
         std::bitset<static_cast<size_t>(InputId::Count)> m_InputStates[INPUT_STATE_BUFFER_COUNT];
         size_t m_CurrentInputStateIndex;
-        ApplicationWindow* m_Window;
     };
 
 }

@@ -12,6 +12,24 @@ namespace silk::sandbox
     {
         m_InputService = &engine.GetInputService();
 
+        m_LeftAction.ConfigureButton();
+        m_LeftAction.AddSettings({}, InputId::KeyLeft);
+
+        m_RightAction.ConfigureButton();
+        m_RightAction.AddSettings({}, InputId::KeyRight);
+
+        m_ResetAction.ConfigureButton(ButtonInputActionEvent::Release);
+        m_ResetAction.AddSettings({}, InputId::KeySpace);
+
+        InputActionWatcher& inputActionWatcher{ m_InputService->GetInputActionWatcher() };
+        inputActionWatcher.RegisterInputAction(m_LeftAction);
+        inputActionWatcher.RegisterInputAction(m_RightAction);
+        inputActionWatcher.RegisterInputAction(m_ResetAction);
+
+        m_OnResetSlot.SetBoundFunction([this](const InputActionState& state) { OnReset(state); });
+        inputActionWatcher.GetInputActionState(m_ResetAction)->GetButtonEventSignal().Connect(m_OnResetSlot);
+
+
         engine.GetDebugToolbox().RegisterTool(&m_SandboxDebugTool);
 
         m_KeyboardDevice.Init(engine.GetMainWindow());
@@ -110,6 +128,14 @@ namespace silk::sandbox
 
     void SandboxModuleEntryPoints::Uninstall(Engine& engine)
     {
+        InputActionWatcher& inputActionWatcher{ m_InputService->GetInputActionWatcher() };
+
+        inputActionWatcher.GetInputActionState(m_ResetAction)->GetButtonEventSignal().Disconnect(m_OnResetSlot);
+
+        inputActionWatcher.UnregisterInputAction(m_LeftAction);
+        inputActionWatcher.UnregisterInputAction(m_RightAction);
+        inputActionWatcher.UnregisterInputAction(m_ResetAction);
+
         engine.GetInputService().UnregisterDevice(m_KeyboardDevice);
         m_KeyboardDevice.Shutdown(engine.GetMainWindow());
 
@@ -125,11 +151,11 @@ namespace silk::sandbox
 
     void SandboxModuleEntryPoints::OnDraw(GraphicsContext& context, const Camera& camera)
     {
-        if (m_InputService->IsButtonDown(InputId::KeyLeft))
+        if (m_InputService->GetInputActionWatcher().GetButtonState(m_LeftAction))
         {
             m_Value -= 0.1f;
         }
-        if (m_InputService->IsButtonDown(InputId::KeyRight))
+        if (m_InputService->GetInputActionWatcher().GetButtonState(m_RightAction))
         {
             m_Value += 0.1f;
         }
@@ -161,5 +187,10 @@ namespace silk::sandbox
         context.DrawMesh(m_Mesh);
         m_Texture.Unbind();
         m_Shader.Unbind();
+    }
+
+    void SandboxModuleEntryPoints::OnReset(const InputActionState&)
+    {
+        m_Value = 0.0f;
     }
 }
