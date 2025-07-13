@@ -4,12 +4,43 @@
 
 #include <silk/engine/engine.h>
 #include <silk/engine/graphics/vertex_buffer.h>
+#include <silk/engine/input/keyboard_device.h>
 
 namespace silk::sandbox
 {
     void SandboxModuleEntryPoints::Install(Engine& engine)
     {
         engine.GetDebugToolbox().RegisterTool(&m_SandboxDebugTool);
+
+        m_InputService = &engine.GetInputService();
+
+        m_KeyboardDevice.Init(engine.GetMainWindow());
+        m_InputService->RegisterDevice(m_KeyboardDevice);
+
+        m_MouseDevice.Init(engine.GetMainWindow());
+        m_InputService->RegisterDevice(m_MouseDevice);
+
+        m_LeftAction.ConfigureButton();
+        m_LeftAction.AddSettings(m_KeyboardDevice.GetDeviceId(), (InputId)KeyboardInputId::KeyLeft);
+
+        m_RightAction.ConfigureButton();
+        m_RightAction.AddSettings(m_KeyboardDevice.GetDeviceId(), (InputId)KeyboardInputId::KeyRight);
+
+        m_ResetAction.ConfigureButton(ButtonInputActionEvent::Tap);
+        m_ResetAction.AddSettings(m_KeyboardDevice.GetDeviceId(), (InputId)KeyboardInputId::KeySpace);
+
+        m_MouseXAction.ConfigureAnalog();
+        m_MouseXAction.AddSettings(m_MouseDevice.GetDeviceId(), (InputId)MouseInputId::CursorX);
+
+        InputActionWatcher& inputActionWatcher{ m_InputService->GetInputActionWatcher() };
+        inputActionWatcher.RegisterInputAction(m_LeftAction);
+        inputActionWatcher.RegisterInputAction(m_RightAction);
+        inputActionWatcher.RegisterInputAction(m_ResetAction);
+        inputActionWatcher.RegisterInputAction(m_MouseXAction);
+
+        m_OnResetSlot.SetBoundFunction([this](const InputActionState& state) { OnReset(state); });
+        inputActionWatcher.GetInputActionState(m_ResetAction)->GetButtonEventSignal().Connect(m_OnResetSlot);
+
 
         m_Camera.SetPriority(1);
         m_Camera.EnableScreenClear({});
@@ -104,6 +135,21 @@ namespace silk::sandbox
 
     void SandboxModuleEntryPoints::Uninstall(Engine& engine)
     {
+        InputActionWatcher& inputActionWatcher{ m_InputService->GetInputActionWatcher() };
+
+        inputActionWatcher.GetInputActionState(m_ResetAction)->GetButtonEventSignal().Disconnect(m_OnResetSlot);
+
+        inputActionWatcher.UnregisterInputAction(m_MouseXAction);
+        inputActionWatcher.UnregisterInputAction(m_LeftAction);
+        inputActionWatcher.UnregisterInputAction(m_RightAction);
+        inputActionWatcher.UnregisterInputAction(m_ResetAction);
+
+        engine.GetInputService().UnregisterDevice(m_MouseDevice);
+        m_MouseDevice.Shutdown(engine.GetMainWindow());
+
+        engine.GetInputService().UnregisterDevice(m_KeyboardDevice);
+        m_KeyboardDevice.Shutdown(engine.GetMainWindow());
+
         m_Texture.Destroy();
         m_Mesh.Destroy();
         m_Shader.Destroy();
@@ -116,7 +162,18 @@ namespace silk::sandbox
 
     void SandboxModuleEntryPoints::OnDraw(GraphicsContext& context, const Camera& camera)
     {
+        if (m_InputService->GetInputActionWatcher().GetButtonState(m_LeftAction))
+        {
+            m_Value -= 0.1f;
+        }
+        if (m_InputService->GetInputActionWatcher().GetButtonState(m_RightAction))
+        {
+            m_Value += 0.1f;
+        }
+
         glm::mat4 Model = glm::mat4(1.0f);
+        Model = glm::rotate(Model, m_Value, glm::vec3{ 0.0f, 1.0f, 0.0f });
+
         glm::mat4 mvp = camera.GetProjectionMatrix() * camera .GetViewMatrix() * Model;
 
         m_Shader.Bind();
@@ -129,8 +186,10 @@ namespace silk::sandbox
 
     void SandboxModuleEntryPoints::OnDrawUI(GraphicsContext& context, const Camera& camera)
     {
+        float mouseX{ m_InputService->GetInputActionWatcher().GetAnalogState(m_MouseXAction) };
+
         glm::mat4 Model = glm::mat4(1.0f);
-        Model = glm::translate(Model, glm::vec3{ 100.0f, 100.0f, 0.0f });
+        Model = glm::translate(Model, glm::vec3{ mouseX, 100.0f, 0.0f });
         Model = glm::scale(Model, glm::vec3{ 100.0f });
 
         glm::mat4 mvp = camera.GetProjectionMatrix() * camera .GetViewMatrix() * Model;
@@ -141,5 +200,10 @@ namespace silk::sandbox
         context.DrawMesh(m_Mesh);
         m_Texture.Unbind();
         m_Shader.Unbind();
+    }
+
+    void SandboxModuleEntryPoints::OnReset(const InputActionState&)
+    {
+        m_Value = 0.0f;
     }
 }

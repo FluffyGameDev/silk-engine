@@ -4,6 +4,7 @@
 
 #include <silk/engine/module/module_entry_points.h>
 #include <silk/engine/service/service.h>
+#include <silk/engine/time/time.h>
 #include <silk/engine/window/application_window_config.h>
 #include <silk/engine/window/application_window_inputs.h>
 
@@ -54,6 +55,8 @@ namespace silk
 
     void Engine::Init()
     {
+        time::StartEngine();
+
         ApplicationWindowConfig mainWindowConfig
         {
             .width = 800,
@@ -62,6 +65,7 @@ namespace silk
         };
 
         m_MainWindow.Init(mainWindowConfig);
+        m_InputService.Init();
         m_GraphicsContext.Init();
         m_DebugToolbox.Init(m_MainWindow);
 
@@ -90,6 +94,7 @@ namespace silk
 
         m_DebugToolbox.Shutdown();
         m_GraphicsContext.Shutdown();
+        m_InputService.Shutdown();
         m_MainWindow.Shutdown();
     }
 
@@ -97,7 +102,9 @@ namespace silk
     {
         m_FrameRateTimer.StartFrame();
         m_DebugToolbox.StartFrame();
+        m_InputService.SwapStateBuffers();
         m_MainWindow.PollInputs(windowInputs);
+        m_InputService.GetInputActionWatcher().Update(m_InputService);
 
         m_UpdateSignal.Raise();
         m_GraphicsContext.Render();
