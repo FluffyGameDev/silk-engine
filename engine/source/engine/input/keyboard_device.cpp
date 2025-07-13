@@ -1,7 +1,6 @@
 #include <silk/engine/input/keyboard_device.h>
 
-#include <glfw/glfw3.h>
-
+#include <silk/core/assert.h>
 #include <silk/engine/window/application_window.h>
 
 namespace silk
@@ -16,7 +15,7 @@ namespace silk
 
     void KeyboardDevice::Init(ApplicationWindow& window)
     {
-        m_OnKeyInputSlot.SetBoundFunction([this](InputId inputId, bool isPressed) { OnkeyInput(inputId, isPressed); });
+        m_OnKeyInputSlot.SetBoundFunction([this](InputId inputId, bool isPressed) { OnKeyInput(inputId, isPressed); });
         window.GetKeyboardInputSignal().Connect(m_OnKeyInputSlot);
     }
 
@@ -25,8 +24,32 @@ namespace silk
         window.GetKeyboardInputSignal().Disconnect(m_OnKeyInputSlot);
     }
 
-    void KeyboardDevice::OnkeyInput(InputId inputId, bool isPressed)
+    void KeyboardDevice::SwapStateBuffers()
     {
-        m_ButtonInputStateChanged.Raise(inputId, isPressed);
+        const auto& prevState{ m_InputStates[m_CurrentInputStateIndex] };
+        m_CurrentInputStateIndex = (m_CurrentInputStateIndex + 1) % INPUT_STATE_BUFFER_COUNT;
+        m_InputStates[m_CurrentInputStateIndex] = prevState;
     }
+
+    float KeyboardDevice::GetAnalogState(InputId) const
+    {
+        SILK_ASSERT(false, "Keyboards do not have analog states.");
+        return 0.0f;
+    }
+
+    bool KeyboardDevice::GetButtonState(InputId inputId) const
+    {
+        return m_InputStates[m_CurrentInputStateIndex].test(static_cast<size_t>(inputId));
+    }
+
+    bool KeyboardDevice::GetButtonPreviousState(InputId inputId) const
+    {
+        return m_InputStates[(m_CurrentInputStateIndex + 1) % INPUT_STATE_BUFFER_COUNT].test(static_cast<size_t>(inputId));
+    }
+
+    void KeyboardDevice::OnKeyInput(InputId inputId, bool isPressed)
+    {
+        m_InputStates[m_CurrentInputStateIndex].set((size_t)inputId, isPressed);
+    }
+
 }

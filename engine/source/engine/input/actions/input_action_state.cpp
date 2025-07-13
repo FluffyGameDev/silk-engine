@@ -28,7 +28,9 @@ namespace silk
         InputActionType actionType{ m_InputAction->GetInputActionType() };
         if (actionType == InputActionType::Analog)
         {
-            // TODO
+            //TODO: use settings of most appropriate device
+            const InputActionSettings& settings{ m_InputAction->GetSettings()[0] };
+            m_AnalogState = inputService.GetAnalogState(settings.deviceId, settings.inputId);
         }
         else if (actionType == InputActionType::Button)
         {
@@ -42,7 +44,7 @@ namespace silk
                     m_ButtonState = false;
                     for (const InputActionSettings& settings : m_InputAction->GetSettings())
                     {
-                        m_ButtonState |= inputService.IsButtonDown(settings.inputId);
+                        m_ButtonState |= inputService.IsButtonDown(settings.deviceId, settings.inputId);
                     }
                     break;
                 }
@@ -51,7 +53,7 @@ namespace silk
                     m_ButtonState = false;
                     for (const InputActionSettings& settings : m_InputAction->GetSettings())
                     {
-                        m_ButtonState |= inputService.IsButtonPressed(settings.inputId);
+                        m_ButtonState |= inputService.IsButtonPressed(settings.deviceId, settings.inputId);
                     }
                     triggerEvent = m_ButtonState;
                     m_CurrentEventStep = m_ButtonState ? ButtonInputActionEventStep::Validate : ButtonInputActionEventStep::Idle;
@@ -62,7 +64,7 @@ namespace silk
                     m_ButtonState = false;
                     for (const InputActionSettings& settings : m_InputAction->GetSettings())
                     {
-                        m_ButtonState |= inputService.IsButtonReleased(settings.inputId);
+                        m_ButtonState |= inputService.IsButtonReleased(settings.deviceId, settings.inputId);
                     }
                     triggerEvent = m_ButtonState;
                     m_CurrentEventStep = m_ButtonState ? ButtonInputActionEventStep::Validate : ButtonInputActionEventStep::Idle;
@@ -73,7 +75,7 @@ namespace silk
                     bool buttonState{};
                     for (const InputActionSettings& settings : m_InputAction->GetSettings())
                     {
-                        buttonState |= inputService.IsButtonDown(settings.inputId);
+                        buttonState |= inputService.IsButtonDown(settings.deviceId, settings.inputId);
                     }
 
                     if (m_CurrentEventStep == ButtonInputActionEventStep::Idle)
@@ -105,7 +107,7 @@ namespace silk
                     bool buttonState{};
                     for (const InputActionSettings& settings : m_InputAction->GetSettings())
                     {
-                        buttonState |= inputService.IsButtonDown(settings.inputId);
+                        buttonState |= inputService.IsButtonDown(settings.deviceId, settings.inputId);
                     }
 
                     if (m_CurrentEventStep == ButtonInputActionEventStep::Idle)

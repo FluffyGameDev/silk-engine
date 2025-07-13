@@ -1,6 +1,5 @@
 #pragma once
 
-#include <silk/core/signal.h>
 #include <silk/engine/input/input_types.h>
 
 namespace silk
@@ -10,12 +9,17 @@ namespace silk
     class InputDevice
     {
     public:
-        InputDevice() = default;
         virtual ~InputDevice() = default;
 
+        virtual void SwapStateBuffers() = 0;
+
+        virtual float GetAnalogState(InputId inputId) const = 0;
+        virtual bool GetButtonState(InputId inputId) const = 0;
+        virtual bool GetButtonPreviousState(InputId inputId) const = 0;
+
+        InputDeviceId GetDeviceId() const { return m_DeviceId; }
+
     protected:
-        Signal<void(InputId, float)> m_AnalogInputStateChanged;
-        Signal<void(InputId, bool)> m_ButtonInputStateChanged;
         InputDeviceId m_DeviceId;
 
         friend class InputService;

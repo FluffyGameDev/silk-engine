@@ -10,16 +10,21 @@ namespace silk::sandbox
 {
     void SandboxModuleEntryPoints::Install(Engine& engine)
     {
+        engine.GetDebugToolbox().RegisterTool(&m_SandboxDebugTool);
+
         m_InputService = &engine.GetInputService();
 
+        m_KeyboardDevice.Init(engine.GetMainWindow());
+        m_InputService->RegisterDevice(m_KeyboardDevice);
+
         m_LeftAction.ConfigureButton();
-        m_LeftAction.AddSettings({}, InputId::KeyLeft);
+        m_LeftAction.AddSettings(m_KeyboardDevice.GetDeviceId(), (InputId)KeyboardInputId::KeyLeft);
 
         m_RightAction.ConfigureButton();
-        m_RightAction.AddSettings({}, InputId::KeyRight);
+        m_RightAction.AddSettings(m_KeyboardDevice.GetDeviceId(), (InputId)KeyboardInputId::KeyRight);
 
         m_ResetAction.ConfigureButton(ButtonInputActionEvent::Tap);
-        m_ResetAction.AddSettings({}, InputId::KeySpace);
+        m_ResetAction.AddSettings(m_KeyboardDevice.GetDeviceId(), (InputId)KeyboardInputId::KeySpace);
 
         InputActionWatcher& inputActionWatcher{ m_InputService->GetInputActionWatcher() };
         inputActionWatcher.RegisterInputAction(m_LeftAction);
@@ -29,11 +34,6 @@ namespace silk::sandbox
         m_OnResetSlot.SetBoundFunction([this](const InputActionState& state) { OnReset(state); });
         inputActionWatcher.GetInputActionState(m_ResetAction)->GetButtonEventSignal().Connect(m_OnResetSlot);
 
-
-        engine.GetDebugToolbox().RegisterTool(&m_SandboxDebugTool);
-
-        m_KeyboardDevice.Init(engine.GetMainWindow());
-        engine.GetInputService().RegisterDevice(m_KeyboardDevice);
 
         m_Camera.SetPriority(1);
         m_Camera.EnableScreenClear({});

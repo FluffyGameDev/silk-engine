@@ -23,7 +23,9 @@ namespace silk
         u16 deviceId;
     };
 
-    enum class InputId : u32
+    using InputId = u32;
+
+    enum class KeyboardInputId : u32
     {
         KeySpace,
 
@@ -99,6 +101,19 @@ namespace silk
         KeyMenu,
 
         Count = KeyMenu,
+        Undefined = static_cast<u32>(-1),
+    };
+
+    enum class MouseInputId : u32
+    {
+        LeftButton,
+        MiddleButton,
+        RightButton,
+
+        CursorX,
+        CursorY,
+
+        Count = CursorY,
         Undefined = static_cast<u32>(-1),
     };
 

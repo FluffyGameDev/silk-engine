@@ -1,8 +1,6 @@
 #pragma once
 
-#include <bitset>
-#include <memory>
-#include <vector>
+#include <unordered_map>
 
 #include <silk/core/slot.h>
 #include <silk/engine/input/input_device.h>
@@ -24,33 +22,18 @@ namespace silk
 
         inline InputActionWatcher& GetInputActionWatcher() { return m_InputActionWatcher; }
 
-        bool IsButtonDown(InputId inputId) const;
-        bool IsButtonPressed(InputId inputId) const;
-        bool IsButtonReleased(InputId inputId) const;
+        float GetAnalogState(InputDeviceId deviceId, InputId inputId) const;
+
+        bool IsButtonDown(InputDeviceId deviceId, InputId inputId) const;
+        bool IsButtonPressed(InputDeviceId deviceId, InputId inputId) const;
+        bool IsButtonReleased(InputDeviceId deviceId, InputId inputId) const;
 
         void RegisterDevice(InputDevice& device);
         void UnregisterDevice(InputDevice& device);
 
     private:
-        void OnAnalogInputStateChanged(InputId inputId, float state);
-        void OnButtonInputStateChanged(InputId inputId, bool isPressed);
-
-        struct InputDeviceEntry
-        {
-            InputDeviceEntry() = default;
-            ~InputDeviceEntry();
-
-            InputDevice* device;
-            Slot<void(InputId, float)> analogInputStateChangedSlot;
-            Slot<void(InputId, bool)> buttonInputStateChangedSlot;
-        };
-
-        static constexpr size_t INPUT_STATE_BUFFER_COUNT{ 2 };
-
         InputActionWatcher m_InputActionWatcher;
-        std::vector<std::unique_ptr<InputDeviceEntry>> m_Devices;
-        std::bitset<static_cast<size_t>(InputId::Count)> m_InputStates[INPUT_STATE_BUFFER_COUNT];
-        size_t m_CurrentInputStateIndex;
+        std::unordered_map<u16, InputDevice*> m_Devices;
     };
 
 }
