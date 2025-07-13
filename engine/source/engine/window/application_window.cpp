@@ -13,6 +13,8 @@
 namespace silk
 {
     static void OnKeyCallback(GLFWwindow*, int, int, int, int);
+    static void OnMouseButtonCallback(GLFWwindow*, int, int, int);
+    static void OnCursorPositionCallback(GLFWwindow*, double, double);
 
     void ApplicationWindow::Init(ApplicationWindowConfig& config)
     {
@@ -36,6 +38,8 @@ namespace silk
 
         glfwSetInputMode(m_Window, GLFW_STICKY_KEYS, GL_TRUE);
         glfwSetKeyCallback(m_Window, OnKeyCallback);
+        glfwSetMouseButtonCallback(m_Window, OnMouseButtonCallback);
+        glfwSetCursorPosCallback(m_Window, OnCursorPositionCallback);
         glfwSetWindowUserPointer(m_Window, this);
     }
 
@@ -75,5 +79,24 @@ namespace silk
             InputId inputId { input::ConvertedGlfwKeyToInputId(key) };
             appWindow->GetKeyboardInputSignal().Raise(inputId, action == GLFW_PRESS);
         }
+    }
+
+    void OnMouseButtonCallback(GLFWwindow* window, int button, int action, int)
+    {
+        ApplicationWindow* appWindow{ reinterpret_cast<ApplicationWindow*>(glfwGetWindowUserPointer(window)) };
+        SILK_ASSERT(appWindow != nullptr, "GLFW window does not have a user pointer.");
+
+        if (action == GLFW_PRESS || action == GLFW_RELEASE)
+        {
+            appWindow->GetMouseInputSignal().Raise((InputId)button, action == GLFW_PRESS);
+        }
+    }
+
+    void OnCursorPositionCallback(GLFWwindow* window, double x, double y)
+    {
+        ApplicationWindow* appWindow{ reinterpret_cast<ApplicationWindow*>(glfwGetWindowUserPointer(window)) };
+        SILK_ASSERT(appWindow != nullptr, "GLFW window does not have a user pointer.");
+
+        appWindow->GetCursorPositionSignal().Raise((float)x, (float)y);
     }
 }

@@ -25,9 +25,13 @@ namespace silk
         inline GLFWwindow* GetWindow() { return m_Window; }
 
         inline Signal<void(InputId, bool)>& GetKeyboardInputSignal() { return m_KeyboardInputSignal; }
+        inline Signal<void(InputId, bool)>& GetMouseInputSignal() { return m_MouseInputSignal; }
+        inline Signal<void(float, float)>& GetCursorPositionSignal() { return m_CursorPositionSignal; }
 
     private:
         GLFWwindow* m_Window;
         Signal<void(InputId, bool)> m_KeyboardInputSignal;
+        Signal<void(InputId, bool)> m_MouseInputSignal;
+        Signal<void(float, float)> m_CursorPositionSignal;
     };
 }
