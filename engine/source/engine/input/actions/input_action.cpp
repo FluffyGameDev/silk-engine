@@ -9,7 +9,7 @@ namespace silk
         m_ButtonInputActionEvent = ButtonInputActionEvent::None;
     }
 
-    void InputAction::ConfigureButton(ButtonInputActionEvent buttonEvent /*= ButtonInputActionEvent::None*/, float eventDuration /*= 0.0f*/)
+    void InputAction::ConfigureButton(ButtonInputActionEvent buttonEvent /*= ButtonInputActionEvent::None*/, float eventDuration /*= 0.5f*/)
     {
         m_InputActionType = InputActionType::Button;
         m_ButtonInputActionEvent = buttonEvent;

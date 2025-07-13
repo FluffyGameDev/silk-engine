@@ -25,7 +25,7 @@ namespace silk
     enum class ButtonInputActionEventStep : u8
     {
         Idle,
-        Start,
+        InProgress,
         Validate,
         Cancel,
     };
@@ -41,7 +41,7 @@ namespace silk
     {
     public:
         void ConfigureAnalog();
-        void ConfigureButton(ButtonInputActionEvent buttonEvent = ButtonInputActionEvent::None, float eventDuration = 0.0f);
+        void ConfigureButton(ButtonInputActionEvent buttonEvent = ButtonInputActionEvent::None, float eventDuration = 0.5f);
 
         void AddSettings(InputDeviceId deviceId, InputId inputId);
 

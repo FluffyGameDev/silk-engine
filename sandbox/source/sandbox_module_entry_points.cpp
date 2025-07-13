@@ -18,7 +18,7 @@ namespace silk::sandbox
         m_RightAction.ConfigureButton();
         m_RightAction.AddSettings({}, InputId::KeyRight);
 
-        m_ResetAction.ConfigureButton(ButtonInputActionEvent::Release);
+        m_ResetAction.ConfigureButton(ButtonInputActionEvent::Tap);
         m_ResetAction.AddSettings({}, InputId::KeySpace);
 
         InputActionWatcher& inputActionWatcher{ m_InputService->GetInputActionWatcher() };

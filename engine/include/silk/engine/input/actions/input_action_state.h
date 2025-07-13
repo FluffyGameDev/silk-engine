@@ -26,6 +26,8 @@ namespace silk
         inline Signal<void(const InputActionState&)>& GetButtonEventSignal() { return m_ButtonEventSignal; }
         inline ButtonInputActionEventStep GetCurrentEventStep() const { return m_CurrentEventStep; }
 
+        float GetEllapsedTime() const;
+
     private:
         const InputAction* m_InputAction;
         Signal<void(const InputActionState&)> m_ButtonEventSignal;

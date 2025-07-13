@@ -4,6 +4,7 @@
 
 #include <silk/engine/module/module_entry_points.h>
 #include <silk/engine/service/service.h>
+#include <silk/engine/time/time.h>
 #include <silk/engine/window/application_window_config.h>
 #include <silk/engine/window/application_window_inputs.h>
 
@@ -54,6 +55,8 @@ namespace silk
 
     void Engine::Init()
     {
+        time::StartEngine();
+
         ApplicationWindowConfig mainWindowConfig
         {
             .width = 800,
